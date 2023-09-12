@@ -1,0 +1,4 @@
+style:
+  font: "LXGW WenKai Lite Bold"
+tex:
+  default: "xelatex"
