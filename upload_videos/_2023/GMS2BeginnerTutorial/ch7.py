@@ -421,10 +421,29 @@ class _5(Scene):
         arrow = Arrow(events.get_right(), step.get_left())
 
         self.play(
-            FadeIn(step),
+            FadeIn(step, begin_time=0.4),
             GrowArrow(arrow)
         )
         self.wait()
+
+        vk_ch_vg = VGroup(*[
+            Text(vk_ch).next_to(vk).next_to(step, coor_mask=(1, 0, 0))
+            for vk, vk_ch in zip(
+                step.plane.txt.select_parts('vk'), 
+                ('左键', '右键', '上键', '下键')
+            )
+        ])
+
+        self.play(
+            Succession(
+                *[
+                    FadeIn(vk_ch)
+                    for vk_ch in vk_ch_vg
+                ],
+                buff=-0.6
+            )
+        )
+        self.wait(2)
         
         
 
