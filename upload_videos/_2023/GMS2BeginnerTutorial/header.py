@@ -1,5 +1,10 @@
 from janim import *
 
+ht2c = {
+    'GML': GREEN, 'Rooms': GREY_BROWN,
+    'Sprite': YELLOW_E, 'Object': BLUE_D, 'Instance': GREEN_D, 'Room': GREY_BROWN, 'Script': GREEN_D, 'Event': GREEN_D,
+}
+
 custom_colors = {
     'KEYWORD': '#ffb871',
     'FUNC': '#ffb871',
@@ -9,7 +14,10 @@ custom_colors = {
     'DIGIT': '#ff8080',
     'STR': '#fcfc00',
     'COMMENT': '#5a985a',
+    'EVENT': ht2c['Event']
 }
+
+DARK_GREEN = '#3f6e2b'
 
 def apply_custom_colors() -> None:
     import janim.constants.colors as colors

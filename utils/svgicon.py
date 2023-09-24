@@ -1,4 +1,7 @@
-class Gear(Difference):
+from janim import *
+import janim.items.boolean_ops as boolean_ops
+
+class Gear(boolean_ops.Difference):
     def __init__(self, diam1=0.4, diam2=0.7, diam3=1, gear_width=0.2, **kwargs):
         line = Rectangle(diam3, gear_width)
         super().__init__(

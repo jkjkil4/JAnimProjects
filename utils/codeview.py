@@ -37,26 +37,47 @@ class CodeSurroundingBackground(CodeBackground, SurroundingRectangle):
 class CodeHeader(Rectangle):
     def __init__(
         self,
+        *args,
         fill_opacity: float = 1.0,
         stroke_width: float = 0.01,
         color: JAnimColor = GREY_A,
         **kwargs
     ) -> None:
-        super().__init__(**local_kwargs(), **kwargs)
+        super().__init__(*args, **local_kwargs(), **kwargs)
 
 class CodePlane(Group):
     def __init__(self, text: str, txt_kwargs = {}, background_kwargs = {}) -> None:
-        self.txt = CodeLines(text, **txt_kwargs)
+        self.txt = VCodeLines(text, **txt_kwargs)
         self.background = CodeSurroundingBackground(self.txt, **background_kwargs)
         super().__init__(self.background, self.txt)
 
-# class CodeView(VGroup):
-#     def __init__(self, title, texts, base_color=GREY_B, lines_kwargs={}, title_color=WHITE, header_color=GREY_D) -> None:
-#         self.lines = CodeLines(texts, base_color, lines_kwargs={})
-#         self.background = CodeBackground(self.lines)
-#         txt_title = Text(title, color = title_color).scale(0.35)
-#         self.header = CodeHeader(self.background.get_width(), txt_title.get_height() + 0.2, fill_color=header_color)
-#         self.header.move_to(self.background.get_top() + [0, self.header.get_height() / 2, 0])
-#         txt_title.move_to(self.header)
-#         self.others = VGroup(self.header, self.background, txt_title)
-#         super().__init__(self.others, self.lines)
+class CodeView(Group):
+    def __init__(
+        self,
+        title: str,
+        text: str,
+        *,
+        header_color: JAnimColor = GREY_D,
+        title_color: JAnimColor = WHITE,
+        txt_color: JAnimColor = GREY_B,
+        title_kwargs: dict = {},
+        txt_kwargs: dict = {},
+        background_kwargs: dict = {},
+    ) -> None:
+        title_kwargs['color'] = title_color
+        txt_kwargs['color'] = txt_color
+        self.plane = CodePlane(text, txt_kwargs, background_kwargs)
+
+        txt_title = Text(title, font_size=17, **title_kwargs)
+        header_bg = CodeHeader(
+            self.plane.background.get_width(), 
+            txt_title.get_height() + 0.2,
+            fill_color=header_color
+        )
+        self.header = VGroup(
+            header_bg,
+            txt_title
+        )
+        super().__init__(self.plane, self.header)
+        self.arrange(UP, buff=0)
+
