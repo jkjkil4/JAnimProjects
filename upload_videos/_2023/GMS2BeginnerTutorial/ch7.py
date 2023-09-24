@@ -143,7 +143,7 @@ class _2(Scene):
         events = Text(
             '创建事件（Create）\n'
             '销毁事件（Destroy）\n'
-            '计时器时间（Alarm）\n'
+            '计时器事件（Alarm）\n'
             '碰撞事件（Collision）\n'
             '按键事件（Keyboard）\n'
             '鼠标事件（Mouse）\n'
@@ -444,11 +444,16 @@ class _5(Scene):
             )
         )
         self.wait(2)
-        
-        
 
-        
+class _6(Scene):
+    def construct(self) -> None:
+        self.wait()
 
-        
+        text = Text(
+            '创建事件（Create）\n'
+            '步事件（Step）\n'
+            '绘制事件（Draw）'
+        ).arrange_in_lines(0.1)
 
-
+        self.play(Write(text))
+        self.wait()
