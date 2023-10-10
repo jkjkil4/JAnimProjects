@@ -1,5 +1,6 @@
 from upload_videos._2023.GMS2BeginnerTutorial.header import *
 from utils.codeview import CodeView
+from utils.shape import surcamera
 
 import random
 
@@ -272,6 +273,124 @@ class _3(Scene):
         self.wait()
         self.play(idx_anim(events, 8, desc[19:21]))
         self.wait(2)
+
+class _3_1(Scene):
+    def construct(self) -> None:
+        self.wait(0)
+
+        sur = surcamera().set_fill(BLACK, 0.3).set_stroke(width=0)
+
+        finger = SVGItem('assets/finger.svg').stretch(0.002, 0).scale(0.5)
+        anchor = Point(DOWN * 0.7 + RIGHT * 0.12)
+        finger.add(anchor, is_helper=True)
+        finger.rotate(-75 * DEGREES)
+
+        btn = VGroup(
+            Rectangle(0.6, 0.2).set_fill(RED, 1),
+            Rectangle(1, 0.25).set_fill(GREY_B, 1),
+        ).set_stroke(BLACK, 0.02).arrange(DOWN, buff=0)
+
+        txt = Text(
+            'Key Press\n'
+            'Key Down\n'
+            'Key Release',
+            font_size=18
+        )
+
+        bar = (
+            Rectangle(4, 0.35).set_stroke(YELLOW_D)
+            * 3
+        ).arrange(DOWN, buff=SMALL_BUFF)
+
+        for t, b in zip(txt, bar):
+            t.next_to(b, LEFT, SMALL_BUFF)
+
+        finger.next_to(btn, LEFT).shift(UR * 0.4 + RIGHT * 0.15)
+
+        gp = Group(
+            Group(finger, btn),
+            Group(txt, bar)
+        ).arrange(DOWN)
+        
+        self.play(FadeIn(sur), FadeIn(gp, begin_time=0.5))
+
+        def anim_finger_down(**kwargs) -> AnimationGroup:
+            return AnimationGroup(
+                finger.anim().rotate(-25 * DEGREES, about_point=anchor.get_pos()),
+                btn[0].anim(begin_time=0.22, run_time=0.78).shift(DOWN * 0.15),
+                rate_func=rush_into,
+                **kwargs
+            )
+        def anim_finger_up(**kwargs) -> AnimationGroup:
+            return AnimationGroup(
+                finger.anim().rotate(25 * DEGREES, about_point=anchor.get_pos()),
+                btn[0].anim(run_time=0.78).shift(UP * 0.15),
+                rate_func=rush_from,
+                **kwargs
+            )
+
+        plates = VGroup()
+        global is_down
+        is_down = False
+
+        plate = lambda: Rectangle(0.1, bar[0].get_height())\
+            .set_fill(YELLOW_D, [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1]).set_stroke(width=0)
+
+        global plates_move_idx
+        plates_move_idx = 0
+
+        def set_is_down(flag: bool) -> None:
+            # nonlocal is_down
+            global is_down, plates_move_idx
+            is_down = flag
+            if flag:
+                plates.add(plate().move_to(bar[0].get_left()))
+                plates.add(plate().move_to(bar[1].get_left()))
+                plates_move_idx = -1
+            else:
+                plates.add(plate().move_to(bar[2].get_left()))
+
+        def plates_updater(_) -> None:
+            global plates_move_idx
+            if is_down:
+                plates_move_idx += 1
+                if plates_move_idx > 3:
+                    plates_move_idx = 0
+                    plates.add(plate().move_to(bar[1].get_left()))
+            plates.shift(RIGHT * 0.04)
+            
+            items = plates.items.copy()
+            for item in items:
+                if item.get_x() < bar[0].get_x(RIGHT):
+                    break
+                plates.remove(item)
+        plates.add_updater(plates_updater)
+
+        self.add(plates)
+
+        self.play(anim_finger_down(run_time=0.3))
+        set_is_down(True)
+        self.wait()
+        set_is_down(False)
+        self.play(anim_finger_up(run_time=0.3))
+
+        self.wait(0.5)
+        
+        self.play(anim_finger_down(run_time=0.3))
+        set_is_down(True)
+        self.wait(0.5)
+        set_is_down(False)
+        self.play(anim_finger_up(run_time=0.3))
+
+        self.wait(1.5)
+        
+        self.play(anim_finger_down(run_time=0.3))
+        set_is_down(True)
+        self.wait(1.5)
+        set_is_down(False)
+        self.play(anim_finger_up(run_time=0.3))
+
+        self.wait(3)
 
 class _4(Scene):
     def construct(self) -> None:

@@ -50,6 +50,8 @@ class _2(Scene):
         
         c2 = CodePlane(
             '<c COMMENT>// 在角色移动例子的 右方向键事件 中</c>\n'
+            '<c BUILTIN_VAR>x</c> += <c DIGIT>4</c>;\n'
+            '\n'
             '<c KEYWORD>if</c> (<c BUILTIN_VAR>x</c> > <c DIGIT>500</c>) {\n'
             '    <c KEYWORD>var</c> <c TMPVAR>tmp</c> = <c FUNC>random_range</c>(<c DIGIT>100</c>, <c DIGIT>200</c>);\n'
             '    <c BUILTIN_VAR>x</c> = <c TMPVAR>tmp</c> * <c DIGIT>2</c>;\n'
